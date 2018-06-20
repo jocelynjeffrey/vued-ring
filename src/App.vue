@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -34,6 +34,10 @@ body {
   border: none;
   border-radius: 15px;
   background: #4A6182;
+
+    &:hover {
+      background: #384D6F;
+    }
 }
 
 </style>
