@@ -101,7 +101,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .echarts {
     height: 400px;
     margin-bottom: 40px;
