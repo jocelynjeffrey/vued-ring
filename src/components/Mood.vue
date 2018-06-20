@@ -7,7 +7,12 @@
         style="width: 100%; height: 100%;"
         @ready="onReady">
       </IEcharts>
-      <h1>{{ mood }}</h1>
+      <button v-on:click="show = !show">
+        Toggle
+      </button>
+      <transition name="fade">
+        <h1 v-if="show">{{ mood }}</h1>
+      </transition>
     </div>
   </div>
 </template>
@@ -25,15 +30,31 @@ export default {
   data() {
     return {
       msg: 'How are you feeling?',
+      show: true,
       moodVariable: null,
-      loading: true,
-      temp: 0,
       gauge: {
+        backgroundColor: '#171C21',
         series: [
           {
-            name: 'Temperature',
+            name: 'Mood',
             type: 'gauge',
-            detail: { formatter: '{value}' },
+            min: 0,
+            max: 100,
+            axisLine: {
+              lineStyle: {
+                color: [[0.2, '#4A6182'], [0.4, '#005B99'], [0.6, '#F7567C'], [0.8, '#FFBF3F'], [1, '#15AC8D']],
+                width: 25,
+                shadowColor: '#fff',
+                shadowBlur: 10,
+              },
+            },
+            detail: {
+              offsetCenter: [0, '50%'],
+              textStyle: {
+                fontWeight: 'bolder',
+                color: '#fff',
+              },
+            },
             data: [{ value: 50, name: '' }],
           },
         ],
@@ -42,7 +63,6 @@ export default {
   },
   computed: {
     mood() {
-      // return this.moodVariable > 50 ? 'happy' : 'sad';
       switch (true) {
         case this.moodVariable <= 20:
           return 'morose';
@@ -81,8 +101,14 @@ export default {
 </script>
 <style scoped>
  .echarts {
-   border: 1px solid red;
    height: 450px;
  }
+
+ .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
 </style>
 
