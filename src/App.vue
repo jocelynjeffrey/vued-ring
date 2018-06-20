@@ -28,7 +28,8 @@ export default {
 body {
   background: #171C21;
 }
-a {
+.btn {
+  cursor: pointer;
   padding: 10px 40px;
   border: none;
   border-radius: 15px;

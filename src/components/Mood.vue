@@ -7,13 +7,13 @@
         style="width: 100%; height: 100%;"
         @ready="onReady">
       </IEcharts>
-      <a v-on:click="getMood">
-        get mood
-      </a>
-      <transition name="fade">
-        <h1 class="status" v-if="show">{{ mood }}</h1>
-      </transition>
     </div>
+    <a class="btn" v-on:click="getMood">
+      get mood
+    </a>
+    <transition name="fade">
+      <h1 class="status" v-if="show">{{ mood }}</h1>
+    </transition>
   </div>
 </template>
 
@@ -103,7 +103,8 @@ export default {
 
 <style scoped>
   .echarts {
-    height: 500px;
+    height: 400px;
+    margin-bottom: 40px;
   }
   .status {
     font-style: italic;
