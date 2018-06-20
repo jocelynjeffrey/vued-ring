@@ -7,11 +7,11 @@
         style="width: 100%; height: 100%;"
         @ready="onReady">
       </IEcharts>
-      <button v-on:click="show = !show">
-        Toggle
-      </button>
+      <a v-on:click="getMood">
+        get mood
+      </a>
       <transition name="fade">
-        <h1 v-if="show">{{ mood }}</h1>
+        <h1 class="status" v-if="show">{{ mood }}</h1>
       </transition>
     </div>
   </div>
@@ -26,11 +26,10 @@ export default {
   components: {
     IEcharts,
   },
-  props: {},
   data() {
     return {
       msg: 'How are you feeling?',
-      show: true,
+      show: false,
       moodVariable: null,
       gauge: {
         backgroundColor: '#171C21',
@@ -55,7 +54,7 @@ export default {
                 color: '#fff',
               },
             },
-            data: [{ value: 50, name: '' }],
+            data: [{ value: 0, name: '' }],
           },
         ],
       },
@@ -78,33 +77,38 @@ export default {
     },
   },
   methods: {
-    refreshData() {
+    getMood() {
       const temp = (Math.random() * 100).toFixed(2) - 0; // set temp from pi
       this.gauge.series[0].data[0].value = temp;
       this.moodVariable = temp;
+      this.show = true;
+      this.reset();
+    },
+    reset() {
+      setTimeout(
+        function() { // eslint-disable-line
+          this.show = false;
+          this.gauge.series[0].data[0].value = 0;
+        }.bind(this),
+        1000,
+      );
     },
     onReady(instance, ECharts) {
       console.log(instance, ECharts); // eslint-disable-line
       console.log(this.gauge.series[0]); // eslint-disable-line
     },
   },
-  mounted() {
-    this.refreshData();
-    setInterval(
-      function() { // eslint-disable-line
-        this.refreshData();
-      }.bind(this),
-      3000,
-    );
-  },
 };
 </script>
-<style scoped>
- .echarts {
-   height: 450px;
- }
 
- .fade-enter-active, .fade-leave-active {
+<style scoped>
+  .echarts {
+    height: 500px;
+  }
+  .status {
+    font-style: italic;
+  }
+  .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
   }
   .fade-enter, .fade-leave-to {
