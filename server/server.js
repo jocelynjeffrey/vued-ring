@@ -1,26 +1,26 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const fallback = require("express-history-api-fallback");
+const express = require('express');
+const bodyParser = require('body-parser');
+const fallback = require('express-history-api-fallback');
 
 const app = express();
 
 const base = '/api/v1';
 
+function getTemp(req, res /* , next */) {
+  res.json({
+    temp: (Math.random() * 100).toFixed(2) - 0,
+  });
+}
+
 class Router {
   constructor() {
-    this._router = express.Router();
+    this.router = express.Router();
 
-    this._router.get(`${base}/gettemperature`, (req, res, next) => this.getTemp(req, res, next));
-  }
-
-  getTemp(req, res, next) {
-    res.json({
-      temp: 500,
-    });
+    this.router.get(`${base}/gettemperature`, (req, res, next) => getTemp(req, res, next));
   }
 
   get router() {
-    return this._router;
+    return this.router;
   }
 }
 
@@ -29,14 +29,14 @@ module.exports = Router;
 class Server {
   constructor() {
     this.port = 3000;
-    this.assetsDirectory = "../dist";
+    this.assetsDirectory = '../dist';
     this.router = new Router();
 
     app.use(bodyParser.json());
     app.use(
       bodyParser.urlencoded({
         // to support URL-encoded bodies
-        extended: true
+        extended: true,
       })
     );
 
@@ -46,15 +46,15 @@ class Server {
     });
     app.use(express.static(this.assetsDirectory));
 
-    app.use(fallback("index.html", { root: this.assetsDirectory }));
+    app.use(fallback('index.html', { root: this.assetsDirectory }));
 
     app.use((err, req, res, next) => {
-      console.log(req.url + ": " + err);
+      console.log(req.url + ': ' + err);
       res.statusMessage = err.message || err;
       res.status(err.status || 500).end();
 
-      var text = err.address + " " + err.message + " on DEBUG";
-      this.saveError("error", text);
+      const text = err.address + ' ' + err.message + ' on DEBUG';
+      this.saveError('error', text);
     });
   }
 
