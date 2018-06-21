@@ -20,6 +20,7 @@
 <script>
 import IEcharts from 'vue-echarts-v3/src/lite'; // link to full library is src/full
 import 'echarts/lib/chart/gauge';
+import axios from 'axios';
 
 export default {
   name: 'Mood',
@@ -95,7 +96,13 @@ export default {
     },
     onReady(instance, ECharts) {
       console.log(instance, ECharts); // eslint-disable-line
-      console.log(this.gauge.series[0]); // eslint-disable-line
+      // const vm = this;
+      axios.get('http://localhost:3000/api/v1/temperature')
+        .then((response) => {
+          // vm.users = response.data;
+          console.log('response is:', response); // eslint-disable-line
+        })
+        .catch(error => console.log('ERROR!!', error)); // eslint-disable-line
     },
   },
 };
