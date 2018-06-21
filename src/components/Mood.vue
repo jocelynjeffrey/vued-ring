@@ -4,12 +4,11 @@
     <div class="echarts">
       <IEcharts
         :option="gauge"
-        style="width: 100%; height: 100%;"
-        @ready="onReady">
+        style="width: 100%; height: 100%;">
       </IEcharts>
     </div>
-    <a class="btn" v-on:click="getMood">
-      get mood
+    <a class="btn" @click="getMood">
+      {{ btnText }}
     </a>
     <transition name="fade">
       <h1 class="status" v-if="show">{{ mood }}</h1>
@@ -30,6 +29,7 @@ export default {
   data() {
     return {
       msg: 'How are you feeling?',
+      btnText: 'get mood',
       show: false,
       moodVariable: null,
       gauge: {
@@ -79,11 +79,17 @@ export default {
   },
   methods: {
     getMood() {
-      const temp = (Math.random() * 100).toFixed(2) - 0; // set temp from pi
-      this.gauge.series[0].data[0].value = temp;
-      this.moodVariable = temp;
+      axios.get('http://localhost:3000/api/v1/temperature')
+        .then((response) => {
+          this.setMood(response.data.temp);
+          this.reset();
+        })
+        .catch(error => console.log('error from server', error)); // eslint-disable-line
+    },
+    setMood(num) {
+      this.gauge.series[0].data[0].value = num;
+      this.moodVariable = num;
       this.show = true;
-      this.reset();
     },
     reset() {
       setTimeout(
@@ -93,16 +99,6 @@ export default {
         }.bind(this),
         1000,
       );
-    },
-    onReady(instance, ECharts) {
-      console.log(instance, ECharts); // eslint-disable-line
-      // const vm = this;
-      axios.get('http://localhost:3000/api/v1/temperature')
-        .then((response) => {
-          // vm.users = response.data;
-          console.log('response is:', response); // eslint-disable-line
-        })
-        .catch(error => console.log('ERROR!!', error)); // eslint-disable-line
     },
   },
 };
