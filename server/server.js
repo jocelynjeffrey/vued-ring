@@ -12,25 +12,13 @@ function getTemp(req, res /* , next */) {
   });
 }
 
-class Router {
-  constructor() {
-    this.router = express.Router();
-
-    this.router.get(`${base}/gettemperature`, (req, res, next) => getTemp(req, res, next));
-  }
-
-  get router() {
-    return this.router;
-  }
-}
-
-module.exports = Router;
-
 class Server {
   constructor() {
     this.port = 3000;
     this.assetsDirectory = '../dist';
-    this.router = new Router();
+
+    this.router = express.Router();
+    this.router.get(`${base}/gettemperature`, (req, res, next) => getTemp(req, res, next));
 
     app.use(bodyParser.json());
     app.use(
@@ -42,7 +30,7 @@ class Server {
 
     // Set up the routing.
     app.use((req, res, next) => {
-      this.router.router(req, res, next);
+      this.router(req, res, next);
     });
     app.use(express.static(this.assetsDirectory));
 
@@ -52,9 +40,6 @@ class Server {
       console.log(req.url + ': ' + err);
       res.statusMessage = err.message || err;
       res.status(err.status || 500).end();
-
-      const text = err.address + ' ' + err.message + ' on DEBUG';
-      this.saveError('error', text);
     });
   }
 
